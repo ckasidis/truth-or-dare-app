@@ -3,6 +3,7 @@ import {
 	AlertDescription,
 	AlertIcon,
 	Button,
+	Heading,
 	HStack,
 	Icon,
 	Modal,
@@ -38,9 +39,15 @@ const fetchTruthOrDare = async (mode: 'truth' | 'dare' | 'truthOrDare') => {
 const GamePage: NextPage<GamePageProps> = ({}) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
-	const mode = useStore((state) => state.mode);
-	const setMode = useStore((state) => state.setMode);
-	const clearPlayers = useStore((state) => state.clearPlayers);
+	const [mode, players, curPlayer, setMode, clearPlayers, randomPlayer] =
+		useStore((state) => [
+			state.mode,
+			state.players,
+			state.curPlayer,
+			state.setMode,
+			state.clearPlayers,
+			state.randomPlayer,
+		]);
 
 	const client = useQueryClient();
 
@@ -57,7 +64,20 @@ const GamePage: NextPage<GamePageProps> = ({}) => {
 			<Head>
 				<title>GamePage</title>
 			</Head>
-			<Stack>
+			<Stack
+				justifyContent={'center'}
+				minH={'100vh'}
+				maxW={'container.sm'}
+				mx={'auto'}
+			>
+				{curPlayer && (
+					<Heading as={'h1'} textAlign={'center'}>
+						{curPlayer}&lsquo;s turn
+					</Heading>
+				)}
+				<Button onClick={onOpen}>
+					{players.length ? 'Edit Players' : 'Add Players'}
+				</Button>
 				<RadioGroup value={mode} onChange={setMode}>
 					<HStack>
 						<Radio value={'truth'}>Truth</Radio>
@@ -88,10 +108,26 @@ const GamePage: NextPage<GamePageProps> = ({}) => {
 						</AlertDescription>
 					</Alert>
 				)}
-				<Button onClick={() => client.resetQueries(['fetchTruthOrDare', mode])}>
+				<Button
+					colorScheme={'blue'}
+					onClick={() => {
+						client.resetQueries(['fetchTruthOrDare', mode]);
+						randomPlayer();
+					}}
+				>
 					Reroll
 				</Button>
-				<Button onClick={onOpen}>Edit Players</Button>
+				<HStack>
+					<Button onClick={() => randomPlayer()} flex={1}>
+						Reroll Player
+					</Button>
+					<Button
+						onClick={() => client.resetQueries(['fetchTruthOrDare', mode])}
+						flex={1}
+					>
+						Reroll Question
+					</Button>
+				</HStack>
 			</Stack>
 			<Modal isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay />
@@ -112,6 +148,7 @@ const GamePage: NextPage<GamePageProps> = ({}) => {
 								Clear Players
 							</Button>
 							<Button
+								onClick={onClose}
 								rightIcon={<Icon as={FaTimes} />}
 								colorScheme={'blue'}
 								_dark={{
