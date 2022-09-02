@@ -62,7 +62,7 @@ const GamePage: NextPage<GamePageProps> = ({}) => {
 	return (
 		<>
 			<Head>
-				<title>GamePage</title>
+				<title>Game Page</title>
 			</Head>
 			<Stack
 				justifyContent={'center'}

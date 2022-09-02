@@ -8,7 +8,7 @@ const HomePage: NextPage<HomePageProps> = ({}) => {
 	return (
 		<>
 			<Head>
-				<title>HomePage</title>
+				<title>Home Page</title>
 			</Head>
 			<Stack>
 				<Heading as={'h1'} fontSize={'3xl'}>
