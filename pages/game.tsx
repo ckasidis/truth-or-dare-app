@@ -2,7 +2,9 @@ import {
 	Alert,
 	AlertDescription,
 	AlertIcon,
+	Badge,
 	Button,
+	Flex,
 	Heading,
 	HStack,
 	Icon,
@@ -15,6 +17,7 @@ import {
 	RadioGroup,
 	Spinner,
 	Stack,
+	Tag,
 	Text,
 	useDisclosure,
 } from '@chakra-ui/react';
@@ -87,8 +90,12 @@ const GamePage: NextPage<GamePageProps> = ({}) => {
 				</RadioGroup>
 				{isSuccess ? (
 					<>
+						<Flex>
+							<Badge>
+								<Text>{data.type}</Text>
+							</Badge>
+						</Flex>
 						<Text>{data.question}</Text>
-						<Text>{data.type}</Text>
 					</>
 				) : isLoading ? (
 					<Spinner />
