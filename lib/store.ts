@@ -17,18 +17,38 @@ export const useStore = create<GameSettingsState>((set) => ({
 	curPlayer: null,
 	setMode: (mode) => set(() => ({ mode })),
 	addPlayer: (player) =>
-		set((state) => ({
-			players: [player, ...state.players],
-		})),
+		set((state) => {
+			if (
+				state.players.includes(player) ||
+				player.length < 1 ||
+				player.length > 20
+			)
+				return {};
+			return {
+				players: [player, ...state.players],
+			};
+		}),
 	removePlayer: (player) =>
 		set((state) => ({
+			curPlayer: null,
 			players: state.players.filter((cur) => cur !== player),
 		})),
 	clearPlayers: () => set(() => ({ players: [] })),
 	randomPlayer: () =>
-		set((state) => ({
-			curPlayer: state.players.length
-				? state.players[Math.floor(Math.random() * state.players.length)]
-				: null,
-		})),
+		set((state) => {
+			if (!state.players.length) {
+				return {
+					curPlayer: null,
+				};
+			}
+			let newPlayer =
+				state.players[Math.floor(Math.random() * state.players.length)];
+			while (newPlayer === state.curPlayer) {
+				newPlayer =
+					state.players[Math.floor(Math.random() * state.players.length)];
+			}
+			return {
+				curPlayer: newPlayer,
+			};
+		}),
 }));
