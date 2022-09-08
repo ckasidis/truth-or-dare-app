@@ -2,13 +2,13 @@ import {
 	Button,
 	Flex,
 	FormControl,
+	FormErrorMessage,
 	HStack,
 	Input,
 	Stack,
 	Tag,
 	TagCloseButton,
 	TagLabel,
-	Text,
 } from '@chakra-ui/react';
 import { NextPage } from 'next';
 import { useForm } from 'react-hook-form';
@@ -25,12 +25,23 @@ const PlayerForm: NextPage<PlayerFormProps> = ({}) => {
 		player: string;
 	};
 
-	const { register, handleSubmit, reset } = useForm<FormValues>({
-		mode: 'onTouched',
+	const {
+		register,
+		handleSubmit,
+		reset,
+		formState: { errors },
+	} = useForm<FormValues>({
 		defaultValues: {
 			player: '',
 		},
 	});
+
+	const isValidPlayer = (player: string) => {
+		if (players.includes(player)) return 'cannot have duplicate names';
+		if (player.length < 1) return 'name cannot be empty';
+		if (player.length > 20) return 'name cannot have more than 20 characters';
+		return true;
+	};
 
 	return (
 		<Stack spacing={6}>
@@ -41,21 +52,19 @@ const PlayerForm: NextPage<PlayerFormProps> = ({}) => {
 				})}
 			>
 				<HStack>
-					<FormControl>
-						<Input {...register('player')} />
+					<FormControl isInvalid={!!errors.player}>
+						<HStack>
+							<Input {...register('player', { validate: isValidPlayer })} />
+							<Button type="submit">add</Button>
+						</HStack>
+						<FormErrorMessage>{errors.player?.message}</FormErrorMessage>
 					</FormControl>
-					<Button type="submit">add</Button>
 				</HStack>
 			</form>
 			{players.length && (
 				<Flex flexWrap={'wrap'} gap={2}>
 					{players.map((player) => (
-						<Tag
-							key={player}
-							borderRadius="full"
-							// variant={'solid'}
-							// colorScheme={'blue'}
-						>
+						<Tag key={player} borderRadius="full">
 							<TagLabel>{player}</TagLabel>
 							<TagCloseButton onClick={() => removePlayer(player)} />
 						</Tag>
