@@ -13,19 +13,17 @@ import {
 	ModalContent,
 	ModalFooter,
 	ModalOverlay,
-	Radio,
-	RadioGroup,
 	Spinner,
 	Stack,
-	Tag,
 	Text,
 	useDisclosure,
 } from '@chakra-ui/react';
 import { NextPage } from 'next';
 import Head from 'next/head';
-import { FaTimes, FaTrash } from 'react-icons/fa';
+import { FaChevronDown, FaPen, FaPlus, FaTimes, FaTrash } from 'react-icons/fa';
 import { useQuery, useQueryClient } from 'react-query';
 import { useStore } from '../lib/store';
+import ModeForm from './components/ModeForm';
 import PlayerForm from './components/PlayerForm';
 
 interface GamePageProps {}
@@ -40,17 +38,18 @@ const fetchTruthOrDare = async (mode: 'truth' | 'dare' | 'truthOrDare') => {
 };
 
 const GamePage: NextPage<GamePageProps> = ({}) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const playerForm = useDisclosure();
+	const modeForm = useDisclosure();
 
-	const [mode, players, curPlayer, setMode, clearPlayers, randomPlayer] =
-		useStore((state) => [
+	const [mode, players, curPlayer, clearPlayers, randomPlayer] = useStore(
+		(state) => [
 			state.mode,
 			state.players,
 			state.curPlayer,
-			state.setMode,
 			state.clearPlayers,
 			state.randomPlayer,
-		]);
+		]
+	);
 
 	const client = useQueryClient();
 
@@ -78,16 +77,6 @@ const GamePage: NextPage<GamePageProps> = ({}) => {
 						{curPlayer}&lsquo;s turn
 					</Heading>
 				)}
-				<Button onClick={onOpen}>
-					{players.length ? 'Edit Players' : 'Add Players'}
-				</Button>
-				<RadioGroup value={mode} onChange={setMode}>
-					<HStack>
-						<Radio value={'truth'}>Truth</Radio>
-						<Radio value={'dare'}>Dare</Radio>
-						<Radio value={'truthOrDare'}>Truth or Dare</Radio>
-					</HStack>
-				</RadioGroup>
 				{isSuccess ? (
 					<>
 						<Flex>
@@ -125,18 +114,44 @@ const GamePage: NextPage<GamePageProps> = ({}) => {
 					Reroll
 				</Button>
 				<HStack>
-					<Button onClick={() => randomPlayer()} flex={1}>
-						Reroll Player
-					</Button>
-					<Button
-						onClick={() => client.resetQueries(['fetchTruthOrDare', mode])}
-						flex={1}
-					>
-						Reroll Question
-					</Button>
+					<Stack flex={1}>
+						{players.length && (
+							<Button
+								isDisabled={!players.length}
+								onClick={() => randomPlayer()}
+							>
+								Reroll Player
+							</Button>
+						)}
+						<Button
+							onClick={playerForm.onOpen}
+							colorScheme={'red'}
+							size={'sm'}
+							rightIcon={players.length ? <FaPen /> : <FaPlus />}
+						>
+							{players.length ? 'Edit Players' : 'Add Players'}
+						</Button>
+					</Stack>
+					<Stack flex={1}>
+						{players.length && (
+							<Button
+								onClick={() => client.resetQueries(['fetchTruthOrDare', mode])}
+							>
+								Reroll Question
+							</Button>
+						)}
+						<Button
+							onClick={modeForm.onOpen}
+							colorScheme={'red'}
+							size={'sm'}
+							rightIcon={<FaChevronDown />}
+						>
+							Select Mode
+						</Button>
+					</Stack>
 				</HStack>
 			</Stack>
-			<Modal isOpen={isOpen} onClose={onClose}>
+			<Modal isOpen={playerForm.isOpen} onClose={playerForm.onClose}>
 				<ModalOverlay />
 				<ModalContent pt={3}>
 					<ModalBody>
@@ -155,7 +170,29 @@ const GamePage: NextPage<GamePageProps> = ({}) => {
 								Clear Players
 							</Button>
 							<Button
-								onClick={onClose}
+								onClick={playerForm.onClose}
+								rightIcon={<Icon as={FaTimes} />}
+								colorScheme={'blue'}
+								_dark={{
+									color: 'blue.900',
+								}}
+							>
+								Close
+							</Button>
+						</HStack>
+					</ModalFooter>
+				</ModalContent>
+			</Modal>
+			<Modal isOpen={modeForm.isOpen} onClose={modeForm.onClose}>
+				<ModalOverlay />
+				<ModalContent pt={3}>
+					<ModalBody>
+						<ModeForm />
+					</ModalBody>
+					<ModalFooter>
+						<HStack>
+							<Button
+								onClick={modeForm.onClose}
 								rightIcon={<Icon as={FaTimes} />}
 								colorScheme={'blue'}
 								_dark={{
