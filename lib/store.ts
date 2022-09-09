@@ -33,7 +33,11 @@ export const useStore = create<GameSettingsState>((set) => ({
 			curPlayer: null,
 			players: state.players.filter((cur) => cur !== player),
 		})),
-	clearPlayers: () => set(() => ({ players: [] })),
+	clearPlayers: () =>
+		set(() => ({
+			curPlayer: null,
+			players: [],
+		})),
 	randomPlayer: () =>
 		set((state) => {
 			if (!state.players.length) {
