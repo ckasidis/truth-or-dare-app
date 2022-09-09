@@ -47,7 +47,7 @@ export const useStore = create<GameSettingsState>((set) => ({
 			}
 			let newPlayer =
 				state.players[Math.floor(Math.random() * state.players.length)];
-			while (newPlayer === state.curPlayer) {
+			while (state.players.length > 1 && newPlayer === state.curPlayer) {
 				newPlayer =
 					state.players[Math.floor(Math.random() * state.players.length)];
 			}
