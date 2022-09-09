@@ -4,6 +4,7 @@ import {
 	AlertIcon,
 	Badge,
 	Button,
+	Center,
 	Flex,
 	Heading,
 	HStack,
@@ -20,7 +21,16 @@ import {
 } from '@chakra-ui/react';
 import { NextPage } from 'next';
 import Head from 'next/head';
-import { FaChevronDown, FaPen, FaPlus, FaTimes, FaTrash } from 'react-icons/fa';
+import {
+	FaCog,
+	FaPen,
+	FaPlus,
+	FaQuestion,
+	FaRedo,
+	FaTimes,
+	FaTrash,
+	FaUser,
+} from 'react-icons/fa';
 import { useQuery, useQueryClient } from 'react-query';
 import { useStore } from '../lib/store';
 import ModeForm from './components/ModeForm';
@@ -67,27 +77,29 @@ const GamePage: NextPage<GamePageProps> = ({}) => {
 				<title>Game Page</title>
 			</Head>
 			<Stack
+				spacing={6}
 				justifyContent={'center'}
 				minH={'100vh'}
 				maxW={'container.sm'}
+				px={{ base: '5%', md: '0' }}
 				mx={'auto'}
 			>
-				{curPlayer && (
-					<Heading as={'h1'} textAlign={'center'}>
-						{curPlayer}&lsquo;s turn
-					</Heading>
-				)}
+				<Heading as={'h1'} textAlign={'center'}>
+					{curPlayer ? `${curPlayer}'s turn` : `Truth or Dare`}
+				</Heading>
 				{isSuccess ? (
-					<>
+					<Stack>
 						<Flex>
 							<Badge>
 								<Text>{data.type}</Text>
 							</Badge>
 						</Flex>
-						<Text>{data.question}</Text>
-					</>
+						<Text fontSize={'lg'}>{data.question}</Text>
+					</Stack>
 				) : isLoading ? (
-					<Spinner />
+					<Center>
+						<Spinner />
+					</Center>
 				) : isError ? (
 					<Alert status="error">
 						<AlertIcon />
@@ -99,57 +111,66 @@ const GamePage: NextPage<GamePageProps> = ({}) => {
 					<Alert status="info">
 						<AlertIcon />
 						<AlertDescription>
-							You don&lsquo;t have any questions. Press<strong> Reroll </strong>
+							You don&lsquo;t have any questions. Press
+							<strong> Reroll </strong>
 							to start
 						</AlertDescription>
 					</Alert>
 				)}
-				<Button
-					colorScheme={'blue'}
-					onClick={() => {
-						client.resetQueries(['fetchTruthOrDare', mode]);
-						randomPlayer();
-					}}
-				>
-					Reroll
-				</Button>
-				<HStack>
-					<Stack flex={1}>
-						{players.length && (
+				<Stack>
+					<Button
+						colorScheme={'blue'}
+						onClick={() => {
+							client.resetQueries(['fetchTruthOrDare', mode]);
+							randomPlayer();
+						}}
+						rightIcon={<FaRedo />}
+					>
+						{players.length ? 'Reroll Player and Question' : 'Reroll Question'}
+					</Button>
+					<HStack>
+						<Stack flex={1}>
+							{players.length && (
+								<Button
+									onClick={() => randomPlayer()}
+									size={'sm'}
+									rightIcon={<FaUser />}
+								>
+									Reroll Player
+								</Button>
+							)}
 							<Button
-								isDisabled={!players.length}
-								onClick={() => randomPlayer()}
+								onClick={playerForm.onOpen}
+								size={'sm'}
+								rightIcon={players.length ? <FaPen /> : <FaPlus />}
+								colorScheme={'red'}
 							>
-								Reroll Player
+								{players.length ? 'Edit Players' : 'Add Players'}
 							</Button>
-						)}
-						<Button
-							onClick={playerForm.onOpen}
-							colorScheme={'red'}
-							size={'sm'}
-							rightIcon={players.length ? <FaPen /> : <FaPlus />}
-						>
-							{players.length ? 'Edit Players' : 'Add Players'}
-						</Button>
-					</Stack>
-					<Stack flex={1}>
-						{players.length && (
+						</Stack>
+						<Stack flex={1}>
+							{players.length && (
+								<Button
+									onClick={() =>
+										client.resetQueries(['fetchTruthOrDare', mode])
+									}
+									size={'sm'}
+									rightIcon={<FaQuestion />}
+								>
+									Reroll Question
+								</Button>
+							)}
 							<Button
-								onClick={() => client.resetQueries(['fetchTruthOrDare', mode])}
+								onClick={modeForm.onOpen}
+								size={'sm'}
+								rightIcon={<FaCog />}
+								colorScheme={'red'}
 							>
-								Reroll Question
+								Select Mode
 							</Button>
-						)}
-						<Button
-							onClick={modeForm.onOpen}
-							colorScheme={'red'}
-							size={'sm'}
-							rightIcon={<FaChevronDown />}
-						>
-							Select Mode
-						</Button>
-					</Stack>
-				</HStack>
+						</Stack>
+					</HStack>
+				</Stack>
 			</Stack>
 			<Modal isOpen={playerForm.isOpen} onClose={playerForm.onClose}>
 				<ModalOverlay />
@@ -163,9 +184,6 @@ const GamePage: NextPage<GamePageProps> = ({}) => {
 								onClick={clearPlayers}
 								rightIcon={<Icon as={FaTrash} />}
 								colorScheme={'red'}
-								_dark={{
-									color: 'red.900',
-								}}
 							>
 								Clear Players
 							</Button>
@@ -173,9 +191,6 @@ const GamePage: NextPage<GamePageProps> = ({}) => {
 								onClick={playerForm.onClose}
 								rightIcon={<Icon as={FaTimes} />}
 								colorScheme={'blue'}
-								_dark={{
-									color: 'blue.900',
-								}}
 							>
 								Close
 							</Button>
