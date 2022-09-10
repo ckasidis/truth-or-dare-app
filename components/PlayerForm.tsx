@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { NextPage } from 'next';
 import { useForm } from 'react-hook-form';
-import { useStore } from '../../lib/store';
+import { useStore } from '../lib/store';
 
 interface PlayerFormProps {}
 

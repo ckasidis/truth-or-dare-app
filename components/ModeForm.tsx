@@ -1,6 +1,6 @@
 import { HStack, Radio, RadioGroup, Stack } from '@chakra-ui/react';
 import { NextPage } from 'next';
-import { useStore } from '../../lib/store';
+import { useStore } from '../lib/store';
 
 interface ModeFormProps {}
 

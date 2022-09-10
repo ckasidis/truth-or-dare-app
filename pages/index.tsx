@@ -33,8 +33,8 @@ import {
 } from 'react-icons/fa';
 import { useQuery, useQueryClient } from 'react-query';
 import { useStore } from '../lib/store';
-import ModeForm from './components/ModeForm';
-import PlayerForm from './components/PlayerForm';
+import ModeForm from '../components/ModeForm';
+import PlayerForm from '../components/PlayerForm';
 
 interface GamePageProps {}
 
@@ -90,7 +90,7 @@ const GamePage: NextPage<GamePageProps> = ({}) => {
 				{isSuccess ? (
 					<Stack>
 						<Flex>
-							<Badge>
+							<Badge fontSize={'lg'}>
 								<Text>{data.type}</Text>
 							</Badge>
 						</Flex>
