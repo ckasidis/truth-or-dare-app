@@ -21,6 +21,8 @@ import {
 	Text,
 	useColorMode,
 	useDisclosure,
+	useMediaQuery,
+	useTheme,
 } from '@chakra-ui/react';
 import { NextPage } from 'next';
 import Head from 'next/head';
@@ -41,6 +43,7 @@ import { useQuery, useQueryClient } from 'react-query';
 import { useStore } from '../lib/store';
 import ModeForm from '../components/ModeForm';
 import PlayerForm from '../components/PlayerForm';
+import Version from '../components/Version';
 
 interface GamePageProps {}
 
@@ -55,6 +58,11 @@ const fetchTruthOrDare = async (mode: 'truth' | 'dare' | 'truthOrDare') => {
 
 const GamePage: NextPage<GamePageProps> = ({}) => {
 	const { colorMode, toggleColorMode } = useColorMode();
+	const theme = useTheme();
+
+	const [isLargerThanSm] = useMediaQuery(
+		`(min-width: ${theme.breakpoints.sm})`
+	);
 
 	const playerForm = useDisclosure();
 	const modeForm = useDisclosure();
@@ -79,6 +87,23 @@ const GamePage: NextPage<GamePageProps> = ({}) => {
 		}
 	);
 
+	const topBarButtons = (
+		<>
+			<Link href="https://github.com/ck-oss/tod-app">
+				<Button variant={'ghost'} leftIcon={<FaGithub />}>
+					GitHub
+				</Button>
+			</Link>
+			<Button
+				variant={'ghost'}
+				onClick={toggleColorMode}
+				leftIcon={colorMode === 'light' ? <FaMoon /> : <FaSun />}
+			>
+				{colorMode === 'light' ? 'Dark' : 'Light'}
+			</Button>
+		</>
+	);
+
 	return (
 		<>
 			<Head>
@@ -92,18 +117,14 @@ const GamePage: NextPage<GamePageProps> = ({}) => {
 					px={{ base: '5%', md: '0' }}
 					mx={'auto'}
 				>
-					<Link href="https://github.com/ck-oss/tod-app">
-						<Button variant={'ghost'} leftIcon={<FaGithub />}>
-							GitHub
-						</Button>
-					</Link>
-					<Button
-						variant={'ghost'}
-						onClick={toggleColorMode}
-						leftIcon={colorMode === 'light' ? <FaMoon /> : <FaSun />}
-					>
-						{colorMode === 'light' ? 'Dark' : 'Light'}
-					</Button>
+					{isLargerThanSm ? (
+						<>
+							<Version />
+							<HStack>{topBarButtons}</HStack>
+						</>
+					) : (
+						topBarButtons
+					)}
 				</HStack>
 			</Box>
 			<Stack
