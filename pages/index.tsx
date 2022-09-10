@@ -3,12 +3,14 @@ import {
 	AlertDescription,
 	AlertIcon,
 	Badge,
+	Box,
 	Button,
 	Center,
 	Flex,
 	Heading,
 	HStack,
 	Icon,
+	Link,
 	Modal,
 	ModalBody,
 	ModalContent,
@@ -17,16 +19,20 @@ import {
 	Spinner,
 	Stack,
 	Text,
+	useColorMode,
 	useDisclosure,
 } from '@chakra-ui/react';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import {
 	FaCog,
+	FaGithub,
+	FaMoon,
 	FaPen,
 	FaPlus,
 	FaQuestion,
 	FaRedo,
+	FaSun,
 	FaTimes,
 	FaTrash,
 	FaUser,
@@ -48,6 +54,8 @@ const fetchTruthOrDare = async (mode: 'truth' | 'dare' | 'truthOrDare') => {
 };
 
 const GamePage: NextPage<GamePageProps> = ({}) => {
+	const { colorMode, toggleColorMode } = useColorMode();
+
 	const playerForm = useDisclosure();
 	const modeForm = useDisclosure();
 
@@ -76,9 +84,31 @@ const GamePage: NextPage<GamePageProps> = ({}) => {
 			<Head>
 				<title>Truth or Dare</title>
 			</Head>
+			<Box position={'fixed'} w={'full'} py={6}>
+				<HStack
+					justifyContent={'space-between'}
+					h={'full'}
+					maxW={'container.sm'}
+					px={{ base: '5%', md: '0' }}
+					mx={'auto'}
+				>
+					<Link href="https://github.com/ck-oss/tod-app">
+						<Button variant={'ghost'} leftIcon={<FaGithub />}>
+							GitHub
+						</Button>
+					</Link>
+					<Button
+						variant={'ghost'}
+						onClick={toggleColorMode}
+						leftIcon={colorMode === 'light' ? <FaMoon /> : <FaSun />}
+					>
+						{colorMode === 'light' ? 'Dark' : 'Light'}
+					</Button>
+				</HStack>
+			</Box>
 			<Stack
-				spacing={6}
 				justifyContent={'center'}
+				spacing={6}
 				minH={'100vh'}
 				maxW={'container.sm'}
 				px={{ base: '5%', md: '0' }}
