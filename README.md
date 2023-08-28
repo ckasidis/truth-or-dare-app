@@ -2,7 +2,8 @@
 
 ## Game Settings
 
-- click "Select Mode" to choose between "Truth" "Dare" and "Truth or Dare" game modes
+- click "Game Settings" > "Game Mode" to choose between "Truth or Dare", "Truth", and "Dare" game modes
+- click "Game Settings" > "Game Rating" choose between "PG", "PG-13", and "R" game ratings
 - click "Add Players" or "Edit Players" to add or edit players
 
 ## How to play
