@@ -19,15 +19,21 @@ export function ModeForm({}) {
     >
       <div className="flex items-center space-x-2">
         <RadioGroupItem value="tod" id="tod" />
-        <Label htmlFor="tod">Truth or Dare</Label>
+        <Label htmlFor="tod" className="flex-1 cursor-pointer">
+          Truth or Dare
+        </Label>
       </div>
       <div className="flex items-center space-x-2">
         <RadioGroupItem value="truth" id="truth" />
-        <Label htmlFor="truth">Truth</Label>
+        <Label htmlFor="truth" className="flex-1 cursor-pointer">
+          Truth
+        </Label>
       </div>
       <div className="flex items-center space-x-2">
         <RadioGroupItem value="dare" id="dare" />
-        <Label htmlFor="dare">Dare</Label>
+        <Label htmlFor="dare" className="flex-1 cursor-pointer">
+          Dare
+        </Label>
       </div>
     </RadioGroup>
   );

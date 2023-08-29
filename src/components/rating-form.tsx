@@ -19,15 +19,21 @@ export function RatingForm({}) {
     >
       <div className="flex items-center space-x-2">
         <RadioGroupItem value="pg" id="pg" />
-        <Label htmlFor="pg">PG</Label>
+        <Label htmlFor="pg" className="flex-1 cursor-pointer">
+          PG
+        </Label>
       </div>
       <div className="flex items-center space-x-2">
         <RadioGroupItem value="pg13" id="pg13" />
-        <Label htmlFor="pg13">PG-13</Label>
+        <Label htmlFor="pg13" className="flex-1 cursor-pointer">
+          PG-13
+        </Label>
       </div>
       <div className="flex items-center space-x-2">
         <RadioGroupItem value="r" id="r" />
-        <Label htmlFor="r">R</Label>
+        <Label htmlFor="r" className="flex-1 cursor-pointer">
+          R
+        </Label>
       </div>
     </RadioGroup>
   );

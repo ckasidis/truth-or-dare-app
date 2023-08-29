@@ -67,7 +67,7 @@ export default function GamePage() {
 
   return (
     <>
-      <div className="mx-auto flex min-h-screen max-w-2xl flex-col justify-center space-y-8 px-3">
+      <div className="mx-auto flex min-h-screen max-w-2xl flex-col justify-center space-y-8 px-4">
         <h1 className="sr-only">Truth or Dare</h1>
         <div className="space-y-4">
           <h2 className="text-center text-4xl font-semibold">
